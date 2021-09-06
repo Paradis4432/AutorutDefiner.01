@@ -15,7 +15,7 @@ link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "100_ruts.xlsx"
+nameExcel = "BBDD1000.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -219,7 +219,7 @@ class autoProcess:
             listaUnica.append(excel().getCurrentRutProcessing())
             web().findRutInSearchBar(currentRut)
             try:
-                web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList")
+                web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList") #click en ir y cuenta
             except:
                 # rut is null
                 validRut = False
@@ -227,6 +227,7 @@ class autoProcess:
                 try:
                     date = web().getdate()
                 except:
+                    try:
                     excel().updateStatusColumn("asignar")
                     print("Asignar")
                     excel().updateNextPosForStatus()
@@ -236,10 +237,13 @@ class autoProcess:
                 statusOfRut = web().checkDaysDate(date)
                 excel().updateStatusColumn(statusOfRut)
             else:
-                # rut null return crear
-                excel().updateStatusColumn("crear")
-                driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear()
-                print("Creando Rut")
+                try:
+                    # rut null return crear
+                    excel().updateStatusColumn("crear")
+                    driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear() #borra barra de busqueda
+                    print("Creando Rut")
+                except:
+                    driver.refresh()
             excel().updateNextPosForStatus()
             print("round finished rut: " + excel().getCurrentRutProcessing())
             print("\n\n")
