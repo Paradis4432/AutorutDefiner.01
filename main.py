@@ -8,6 +8,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
+import sys
 
 # ---GLOBAL VARIABLES---
 link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&lang=esn&reason=logoff"
@@ -15,6 +16,7 @@ linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_prac
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
 nameExcel = "testDF.xlsx"
+driver = None
 
 df = pd.read_excel(nameExcel)
 workbook = load_workbook(filename=nameExcel)
@@ -22,8 +24,25 @@ sheet = workbook.active
 
 start = time.time()
 # ---BASIC LOGIC---
-# driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver") #macOS
-driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
+
+try:
+    driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver") #macOS
+except FileNotFoundError:
+    print("chrome file not found")
+else:
+    print("chrome file found, using macOS")
+
+try:
+    driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
+except FileNotFoundError:
+    print("chrome file not found")
+else:
+    print("chrome file found, using Windows")
+
+if driver is None:
+    print("Something went wrong while trying to setup chrome. stopping program")
+    sys.exit()
+
 driver.get(link)
 driver.implicitly_wait(1)  # gives an implicit wait for 1 second
 
@@ -224,6 +243,7 @@ class autoProcess:
             excel().updateNextPosForStatus()
             print("round finished rut: " + excel().getCurrentRutProcessing())
             print("\n\n")
+
 
 
             # logic based on date of current rut
