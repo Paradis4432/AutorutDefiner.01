@@ -227,7 +227,6 @@ class autoProcess:
                 try:
                     date = web().getdate()
                 except:
-                    try:
                     excel().updateStatusColumn("asignar")
                     print("Asignar")
                     excel().updateNextPosForStatus()
