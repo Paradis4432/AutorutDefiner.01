@@ -227,9 +227,7 @@ class autoProcess:
             web().findRutInSearchBar(currentRut)
             try:
                 web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList") #click en ir y cuenta
-            except selenium.common.exceptions.NoSuchElementException:
-                driver.refresh()
-            else:
+            except:
                 # rut is null
                 validRut = False
             if validRut:
@@ -250,7 +248,8 @@ class autoProcess:
                     excel().updateStatusColumn("crear")
                     driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear() #borra barra de busqueda
                     print("Creando Rut")
-                except:
+                except selenium.common.exceptions.NoSuchElementException:
+                    print("error in line 254")
                     driver.refresh()
             excel().updateNextPosForStatus()
             print("round finished rut: " + excel().getCurrentRutProcessing())
@@ -281,4 +280,5 @@ autoProcess().autoLogic()
 
 end = time.time()
 
-print("Runtime of the program is: " + str(int(end - start)/60))
+f = '{0:.3g}'.format(int(end - start)/60)
+print("Runtime of the program is: " + str(f))
