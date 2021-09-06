@@ -22,7 +22,7 @@ link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "100_ruts.xlsx"
+nameExcel = "Libro2.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -35,14 +35,14 @@ start = time.time()
 try:
     driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver") #macOS
 except:
-    print("chrome file not found")
+    print("chrome file not found with macOS path")
 else:
     print("chrome file found, using macOS")
 
 try:
     driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
 except:
-    print("chrome file not found")
+    print("chrome file not found with windows path")
 else:
     print("chrome file found, using Windows")
 
