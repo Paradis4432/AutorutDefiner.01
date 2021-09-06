@@ -27,14 +27,14 @@ start = time.time()
 
 try:
     driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver") #macOS
-except FileNotFoundError:
+except:
     print("chrome file not found")
 else:
     print("chrome file found, using macOS")
 
 try:
     driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
-except FileNotFoundError:
+except:
     print("chrome file not found")
 else:
     print("chrome file found, using Windows")
