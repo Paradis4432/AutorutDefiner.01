@@ -256,7 +256,6 @@ class autoProcess:
             print("\n\n")
 
 
-
             # logic based on date of current rut
             # if rut is null return crear
             # if rut is not null and date > 60 days return asignar
