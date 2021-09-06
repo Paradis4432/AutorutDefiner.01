@@ -5,17 +5,24 @@ from datetime import datetime
 
 import dateutil.parser
 import pandas as pd
+import selenium.common.exceptions
 from openpyxl import load_workbook
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 import sys
+
+# -- COPYRIGHT --
+__author__ = "David Alexander Avilés Brun, Lucas Ezequiel Rodriguez"
+__copyright__ = "Copyright (C) 2021 by David & Lucas"
+__license__ = "All rights reserved."
+__version__ = "1.0"
 
 # ---GLOBAL VARIABLES---
 link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&lang=esn&reason=logoff"
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "BBDD1000.xlsx"
+nameExcel = "100_ruts.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -220,7 +227,9 @@ class autoProcess:
             web().findRutInSearchBar(currentRut)
             try:
                 web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList") #click en ir y cuenta
-            except:
+            except selenium.common.exceptions.NoSuchElementException:
+                driver.refresh()
+            else:
                 # rut is null
                 validRut = False
             if validRut:
@@ -272,4 +281,4 @@ autoProcess().autoLogic()
 
 end = time.time()
 
-print("Runtime of the program is: " + str(end - start))
+print("Runtime of the program is: " + str(int(end - start)/60))
