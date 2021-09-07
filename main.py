@@ -15,14 +15,14 @@ import sys
 __author__ = "David Alexander Avilés Brun, Lucas Ezequiel Rodriguez"
 __copyright__ = "Copyright (C) 2021 by David & Lucas"
 __license__ = "All rights reserved."
-__version__ = "1.0"
+__version__ = "Beta_Salesland"
 
 # ---GLOBAL VARIABLES---
 link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&lang=esn&reason=logoff"
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "Libro2.xlsx"
+nameExcel = "libro3.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -104,6 +104,23 @@ class web:
         else:
             print("returning carterizado")
             return "carterizado"
+
+    def CheckOwner(self):
+        time.sleep(0.1)
+        source = driver.page_source
+        split1 = source.split("&#x20;Name\" onmouseover=\"ToolTipMgr.registerToolTip(ODDom(this),\'") #(this),'\
+        cont = 0
+        owner = []
+        for i in split1:
+            if cont == 0:
+                cont = cont + 1
+                continue
+            owner.append(i[0:11])
+        print("returning owner\n" + str(owner))
+        if owner == "SALESL_FFVV":
+            print("Owner is SalesLand")
+            return owner
+
 
 
 # noinspection PyMethodMayBeStatic
@@ -234,12 +251,17 @@ class autoProcess:
                 try:
                     date = web().getdate()
                 except:
-                    excel().updateStatusColumn("asignar")
-                    print("Asignar")
-                    excel().updateNextPosForStatus()
-                    print("round finished rut: " + excel().getCurrentRutProcessing())
-                    print("\n\n")
-                    continue
+                    web().CheckOwner()
+                    if owner == "SALESL_FFVV":
+                        excel().updateStatusColumn("SALESL_FFVV")
+                        continue
+                    else:
+                        excel().updateStatusColumn("asignar")
+                        print("Asignar")
+                        excel().updateNextPosForStatus()
+                        print("round finished rut: " + excel().getCurrentRutProcessing())
+                        print("\n\n")
+                        continue
                 statusOfRut = web().checkDaysDate(date)
                 excel().updateStatusColumn(statusOfRut)
             else:
