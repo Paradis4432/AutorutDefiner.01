@@ -22,7 +22,7 @@ link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "Libro2.xlsx"
+nameExcel = "ejemplo.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -51,7 +51,7 @@ if driver is None:
     sys.exit()
 
 driver.get(link)
-driver.implicitly_wait(1)  # gives an implicit wait for 1 second
+driver.implicitly_wait(0.5)  # gives an implicit wait for 1 second
 
 
 # driver.maximize_window() # For maximizing window
@@ -80,7 +80,7 @@ class web:
         driver.find_element_by_id(id2).click()
 
     def getdate(self):
-        time.sleep(1)
+        time.sleep(0.1)
         source = driver.page_source
         split1 = source.split("<a class=\"stdFont\">")
         cont = 0
@@ -109,8 +109,6 @@ class web:
         element = driver.find_element_by_id("_rtid_1")
         val = element.get_attribute("innerText")
         return val == "SALESL_FFVV"
-
-
 
 
 # noinspection PyMethodMayBeStatic
@@ -182,7 +180,6 @@ class excel:
         with open('currentPosEditing.txt', 'w') as f:
             f.write(newPos)
             f.close()
-
 
 class autoProcess:
     def getToDate(self):
@@ -284,7 +281,6 @@ class autoProcess:
     # si el rut no esta creado return "crear"
     # si el dato esta creado y la fecha es mayor a 60 dias return "asignar"
     # si la fecha es menos a 60 dias return "carterizado"
-
 
 # print(excel().createStatusColumn())
 autoProcess().autoLogic()
