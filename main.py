@@ -22,7 +22,7 @@ link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "libro3.xlsx"
+nameExcel = "Libro2.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -105,21 +105,11 @@ class web:
             print("returning carterizado")
             return "carterizado"
 
-    def CheckOwner(self):
-        time.sleep(0.1)
-        source = driver.page_source
-        split1 = source.split("&#x20;Name\" onmouseover=\"ToolTipMgr.registerToolTip(ODDom(this),\'") #(this),'\
-        cont = 0
-        owner = []
-        for i in split1:
-            if cont == 0:
-                cont = cont + 1
-                continue
-            owner.append(i[0:11])
-        print("returning owner\n" + str(owner))
-        if owner == "SALESL_FFVV":
-            print("Owner is SalesLand")
-            return owner
+    def checkOwner(self):
+        element = driver.find_element_by_id("_rtid_1")
+        val = element.get_attribute("innerText")
+        return val == "SALESL_FFVV"
+
 
 
 
@@ -247,21 +237,24 @@ class autoProcess:
             except:
                 # rut is null
                 validRut = False
+            try:
+                if web().checkOwner():
+                    excel().updateStatusColumn("SALESL")
+                    excel().updateNextPosForStatus()
+                    continue
+            except selenium.common.exceptions.NoSuchElementException:
+                driver.refresh()
+
             if validRut:
                 try:
                     date = web().getdate()
                 except:
-                    web().CheckOwner()
-                    if owner == "SALESL_FFVV":
-                        excel().updateStatusColumn("SALESL_FFVV")
-                        continue
-                    else:
-                        excel().updateStatusColumn("asignar")
-                        print("Asignar")
-                        excel().updateNextPosForStatus()
-                        print("round finished rut: " + excel().getCurrentRutProcessing())
-                        print("\n\n")
-                        continue
+                    excel().updateStatusColumn("asignar")
+                    print("Asignar")
+                    excel().updateNextPosForStatus()
+                    print("round finished rut: " + excel().getCurrentRutProcessing())
+                    print("\n\n")
+                    continue
                 statusOfRut = web().checkDaysDate(date)
                 excel().updateStatusColumn(statusOfRut)
             else:
@@ -271,7 +264,6 @@ class autoProcess:
                     driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear() #borra barra de busqueda
                     print("Creando Rut")
                 except selenium.common.exceptions.NoSuchElementException:
-                    print("error in line 254")
                     driver.refresh()
             excel().updateNextPosForStatus()
             print("round finished rut: " + excel().getCurrentRutProcessing())
@@ -296,7 +288,7 @@ class autoProcess:
 
 # print(excel().createStatusColumn())
 autoProcess().autoLogic()
-# autoProcess().login()
+#autoProcess().login()
 # excel().checkIfBufferFileExists()
 
 end = time.time()
