@@ -32,19 +32,13 @@ sheet = workbook.active
 start = time.time()
 # ---BASIC LOGIC---
 
-try:
-    driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver") #macOS
-except:
-    print("chrome file not found with macOS path")
-else:
-    print("chrome file found, using macOS")
+try: driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver")  # macOS
+except: print("chrome file not found with macOS path")
+else: print("chrome file found, using macOS")
 
-try:
-    driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
-except:
-    print("chrome file not found with windows path")
-else:
-    print("chrome file found, using Windows")
+try: driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
+except: print("chrome file not found with windows path")
+else: print("chrome file found, using Windows")
 
 if driver is None:
     print("Something went wrong while trying to setup chrome. stopping program")
@@ -182,6 +176,7 @@ class excel:
             f.write(newPos)
             f.close()
 
+
 class autoProcess:
     def getToDate(self):
         web().login()
@@ -207,7 +202,7 @@ class autoProcess:
 
         for value in df['RUT']:
             rutList.append(str(value))
-            #print("appending value " + str(value))
+            # print("appending value " + str(value))
         print("found a total of " + str(len(rutList)) + " elements")
         for data in range(0, len(rutList)):
             print("STARTING")
@@ -220,9 +215,9 @@ class autoProcess:
             print("ASSIGNED CURRENT RUT")
             # si el current rut esta en la lista unica return duplicado
 
-            #print("UNIQUE LIST DEBUG: current data in rutList: " + str(rutList[data]))
-            #print("UNIQUE LIST DEBUG: current listaUnica: " + str(listaUnica))
-            #print("UNIQUE LIST DEBUG: rutList[data] in listaUnica: " + str(bool(rutList[data] in listaUnica)))
+            # print("UNIQUE LIST DEBUG: current data in rutList: " + str(rutList[data]))
+            # print("UNIQUE LIST DEBUG: current listaUnica: " + str(listaUnica))
+            # print("UNIQUE LIST DEBUG: rutList[data] in listaUnica: " + str(bool(rutList[data] in listaUnica)))
 
             if rutList[data] in listaUnica:
                 print("RUTLIST[data] IN LISTAUNICA")
@@ -241,7 +236,7 @@ class autoProcess:
             web().findRutInSearchBar(currentRut)
             print("READY")
             try:
-                web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList") #click en ir y cuenta
+                web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList")  # click en ir y cuenta
                 print("CLCIKED IR AND CUENTA")
             except:
                 # rut is null
@@ -279,7 +274,8 @@ class autoProcess:
                     excel().updateStatusColumn("crear")
                     print("UPDATED CREAR")
                     print("FINDING ELEMENT")
-                    driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear() #borra barra de busqueda
+                    driver.find_element_by_id(
+                        "GlobalSearchMultiField.Location_Shadow").clear()  # borra barra de busqueda
                     print("FOUND")
                     print("Creando Rut")
                 except selenium.common.exceptions.NoSuchElementException:
@@ -317,12 +313,13 @@ class autoProcess:
     # si el dato esta creado y la fecha es mayor a 60 dias return "asignar"
     # si la fecha es menos a 60 dias return "carterizado"
 
+
 # print(excel().createStatusColumn())
 autoProcess().autoLogic()
-#autoProcess().login()
+# autoProcess().login()
 # excel().checkIfBufferFileExists()
 
 end = time.time()
 
-f = '{0:.3g}'.format(int(end - start)/60)
+f = '{0:.3g}'.format(int(end - start) / 60)
 print("Runtime of the program is: " + str(f))
