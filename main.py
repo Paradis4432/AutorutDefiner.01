@@ -22,7 +22,7 @@ link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&
 linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
 user = "EQUIFAX1/SALESL_SUPERVISOR"
 passw = "Sales.2021"
-nameExcel = "ejemplo.xlsx"
+nameExcel = "libro4.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -157,10 +157,11 @@ class excel:
         f.close()
 
     def updateStatusColumn(self, status):
+        print("UPDATE STARTING")
         column, row = self.getNextPosForStatus()
         print("current status pos: " + column + str(row))
         sheet[column + str(row)] = status
-        workbook.save(filename=nameExcel)
+        print("UPDATE ASIGNING STATUS")
 
     def getNextPosForStatus(self):
         with open('currentPosEditing.txt', 'r') as f:
@@ -202,16 +203,21 @@ class autoProcess:
         rutList = []
         listaUnica = []
 
+        cont = 0
+
         for value in df['RUT']:
             rutList.append(str(value))
-            print("appending value " + str(value))
+            #print("appending value " + str(value))
         print("found a total of " + str(len(rutList)) + " elements")
         for data in range(0, len(rutList)):
+            print("STARTING")
             validRut = True
             # update current rut
             excel().updateCurrentRutProcessing(rutList[data])
+            print("UPDATED")
             # get date from current rut
             currentRut = excel().getCurrentRutProcessing()
+            print("ASSIGNED CURRENT RUT")
             # si el current rut esta en la lista unica return duplicado
 
             #print("UNIQUE LIST DEBUG: current data in rutList: " + str(rutList[data]))
@@ -219,6 +225,7 @@ class autoProcess:
             #print("UNIQUE LIST DEBUG: rutList[data] in listaUnica: " + str(bool(rutList[data] in listaUnica)))
 
             if rutList[data] in listaUnica:
+                print("RUTLIST[data] IN LISTAUNICA")
                 # devolver duplicado
                 excel().updateStatusColumn("duplicado")
                 excel().updateNextPosForStatus()
@@ -227,17 +234,25 @@ class autoProcess:
                 print("\n\n")
                 continue
 
+            print("APPEND LISTA UNICA")
             listaUnica.append(excel().getCurrentRutProcessing())
+            print("APPEND DONE")
+            print("SEARCHING")
             web().findRutInSearchBar(currentRut)
+            print("READY")
             try:
                 web().selectAccountAndActivities("_rtid_0", "LNK_HD_ActivityClosedChildList") #click en ir y cuenta
+                print("CLCIKED IR AND CUENTA")
             except:
                 # rut is null
                 validRut = False
             try:
                 if web().checkOwner():
+                    print("OPENING")
                     excel().updateStatusColumn("SALESL")
+                    print("UPDATED COLUMS SALESL")
                     excel().updateNextPosForStatus()
+
                     continue
             except selenium.common.exceptions.NoSuchElementException:
                 driver.refresh()
@@ -246,6 +261,7 @@ class autoProcess:
                 try:
                     date = web().getdate()
                 except:
+                    print("UPDATING ASIGNAR")
                     excel().updateStatusColumn("asignar")
                     print("Asignar")
                     excel().updateNextPosForStatus()
@@ -253,25 +269,44 @@ class autoProcess:
                     print("\n\n")
                     continue
                 statusOfRut = web().checkDaysDate(date)
+                print("UPDATING STATIS OF COLUMN")
                 excel().updateStatusColumn(statusOfRut)
+                print("UPDATED")
             else:
                 try:
                     # rut null return crear
+                    print("UPDATING CREAR")
                     excel().updateStatusColumn("crear")
+                    print("UPDATED CREAR")
+                    print("FINDING ELEMENT")
                     driver.find_element_by_id("GlobalSearchMultiField.Location_Shadow").clear() #borra barra de busqueda
+                    print("FOUND")
                     print("Creando Rut")
                 except selenium.common.exceptions.NoSuchElementException:
                     driver.refresh()
+            print("UPDATING FOR NEXT POS")
             excel().updateNextPosForStatus()
+            print("FINISHED")
             print("round finished rut: " + excel().getCurrentRutProcessing())
             print("\n\n")
-
+            # contador
+            # si contador > 100 guardar
+            if cont > 100:
+                cont = 0
+                print("SAVING")
+                workbook.save(filename=nameExcel)
+                print("SAVED")
+            cont += 1
+            print("CURRENT CONT: " + str(cont))
 
             # logic based on date of current rut
             # if rut is null return crear
             # if rut is not null and date > 60 days return asignar
             # if rut is not null and date < 60 days return carterizado
             # if rut is not null and date is
+        print("SAVING")
+        workbook.save(filename=nameExcel)
+        print("SAVED")
 
     # loop toma la lista de RUTs del excel
     # actualiza current RUT
