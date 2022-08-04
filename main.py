@@ -18,10 +18,10 @@ __license__ = "All rights reserved."
 __version__ = "Beta_Salesland"
 
 # ---GLOBAL VARIABLES---
-link = "https://secure-ausomxbga.crmondemand.com/OnDemand/logon.jsp?type=normal&lang=esn&reason=logoff"
-linkPractice = "https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm"
-user = "EQUIFAX1/AXV3"
-passw = "Ale10vial"
+link = "aaaaa"
+linkPractice = "aaaaa"
+user = "aaaaa"
+passw = "aaaaaa"
 nameExcel = "avial.xlsx"
 driver = None
 
