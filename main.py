@@ -22,7 +22,7 @@ link = "aaaaa"
 linkPractice = "aaaaa"
 user = "aaaaa"
 passw = "aaaaaa"
-nameExcel = "avial.xlsx"
+nameExcel = "file.xlsx"
 driver = None
 
 df = pd.read_excel(nameExcel)
@@ -36,7 +36,7 @@ try: driver = webdriver.Chrome("/opt/homebrew/bin/chromedriver")  # macOS
 except: print("chrome file not found with macOS path")
 else: print("chrome file found, using macOS")
 
-try: driver = webdriver.Chrome("C:/Users/LucasUser/Downloads/chromedriver.exe")  # Win10
+try: driver = webdriver.Chrome("C:/Users/{user}/Downloads/chromedriver.exe")  # Win10
 except: print("chrome file not found with windows path")
 else: print("chrome file found, using Windows")
 
